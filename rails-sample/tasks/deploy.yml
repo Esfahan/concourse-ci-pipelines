@@ -1,0 +1,15 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: ruby
+    tag: 2.4.1
+inputs:
+  - name: pipelines-repo
+  - name: rails-sample
+  - name: capistrano-sample 
+caches:
+  - path: capistrano-sample/vendor/bundle
+run:
+  path: pipelines-repo/rails-sample/scripts/deploy.sh
