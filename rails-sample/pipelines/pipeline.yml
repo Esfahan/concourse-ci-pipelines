@@ -1,0 +1,46 @@
+---
+resources:
+- name: pipelines-repo
+  type: git
+  source:
+    uri: git@github.com:Esfahan/concourse-ci-pipelines.git
+    private_key: {{github-private-key}}
+    branch: feature/rails-sample
+
+- name: rails-sample
+  type: git
+  source:
+    uri: git@github.com:Esfahan/rails-sample.git
+    private_key: {{github-private-key}}
+    branch: feature/concourse-ci
+
+- name: capistrano-sample
+  type: git
+  source:
+    uri: git@github.com:Esfahan/capistrano-sample.git
+    private_key: {{github-private-key}}
+    branch: feature/concourse-ci
+
+jobs:
+- name: rails-job
+  public: true
+  plan:
+    - get: pipelines-repo
+    - get: rails-sample
+      trigger: true
+    - task: build
+      file: pipelines-repo/rails-sample/tasks/build.yml
+
+- name: capistrano-job
+  public: true
+  plan:
+    - get: pipelines-repo
+      passed: [ rails-job ]
+    - get: rails-sample
+      trigger: true
+      passed: [ rails-job ]
+    - get: capistrano-sample
+    - task: deploy
+      file: pipelines-repo/rails-sample/tasks/deploy.yml
+      params:
+        GIT_SSH_KEY: {{github-private-key}}

@@ -1,0 +1,16 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: ruby
+    tag: 2.4.1
+inputs:
+  - name: pipelines-repo
+  - name: rails-sample
+caches:
+  - path: rails-sample/vendor/bundle
+outputs:
+  - name: store-cache
+run:
+  path: pipelines-repo/rails-sample/scripts/build.sh
