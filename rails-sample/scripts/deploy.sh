@@ -13,4 +13,6 @@ ssh-add -l
 # deploy
 cd capistrano-sample
 bundle install --path vendor/bundle
-bundle exec cap development deploy
+
+echo "bundle exec cap ${ENV} deploy"
+bundle exec cap ${ENV} deploy
