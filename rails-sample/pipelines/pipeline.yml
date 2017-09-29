@@ -7,40 +7,82 @@ resources:
     private_key: {{github-private-key}}
     branch: master
 
-- name: rails-sample
+- name: rails-sample-master
   type: git
   source:
     uri: git@github.com:Esfahan/rails-sample.git
     private_key: {{github-private-key}}
     branch: master
 
+- name: rails-sample-staging
+  type: git
+  source:
+    uri: git@github.com:Esfahan/rails-sample.git
+    private_key: {{github-private-key}}
+    branch: staging
+
 - name: capistrano-sample
   type: git
   source:
     uri: git@github.com:Esfahan/capistrano-sample.git
     private_key: {{github-private-key}}
-    branch: master
+    branch: staging
 
 jobs:
-- name: rails-job
+# production
+- name: rails-job-production
+  serial_groups: [ production ]
   public: true
   plan:
     - get: pipelines-repo
     - get: rails-sample
+      resource: rails-sample-master
       trigger: true
     - task: build
       file: pipelines-repo/rails-sample/tasks/build.yml
 
-- name: capistrano-job
+- name: capistrano-job-production
+  serial_groups: [ production ]
   public: true
   plan:
     - get: pipelines-repo
-      passed: [ rails-job ]
+      passed: [ rails-job-production ]
     - get: rails-sample
+      resource: rails-sample-master
       trigger: true
-      passed: [ rails-job ]
+      passed: [ rails-job-production ]
     - get: capistrano-sample
     - task: deploy
       file: pipelines-repo/rails-sample/tasks/deploy.yml
       params:
+        ENV: production
+        GIT_SSH_KEY: {{github-private-key}}
+
+# staging
+- name: rails-job-staging
+  serial_groups: [ staging ]
+  public: true
+  plan:
+    - get: pipelines-repo
+    - get: rails-sample
+      resource: rails-sample-staging
+      trigger: true
+    - task: build
+      file: pipelines-repo/rails-sample/tasks/build.yml
+
+- name: capistrano-job-staging
+  serial_groups: [ staging ]
+  public: true
+  plan:
+    - get: pipelines-repo
+      passed: [ rails-job-staging ]
+    - get: rails-sample
+      resource: rails-sample-staging
+      trigger: true
+      passed: [ rails-job-staging ]
+    - get: capistrano-sample
+    - task: deploy
+      file: pipelines-repo/rails-sample/tasks/deploy.yml
+      params:
+        ENV: staging
         GIT_SSH_KEY: {{github-private-key}}

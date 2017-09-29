@@ -7,7 +7,6 @@ image_resource:
     tag: 2.4.1
 inputs:
   - name: pipelines-repo
-  - name: rails-sample
   - name: capistrano-sample 
 caches:
   - path: capistrano-sample/vendor/bundle
