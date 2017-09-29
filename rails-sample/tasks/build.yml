@@ -10,7 +10,5 @@ inputs:
   - name: rails-sample
 caches:
   - path: rails-sample/vendor/bundle
-outputs:
-  - name: store-cache
 run:
   path: pipelines-repo/rails-sample/scripts/build.sh
