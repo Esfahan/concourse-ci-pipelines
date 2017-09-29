@@ -26,7 +26,7 @@ resources:
   source:
     uri: git@github.com:Esfahan/capistrano-sample.git
     private_key: {{github-private-key}}
-    branch: staging
+    branch: master
 
 jobs:
 # production
