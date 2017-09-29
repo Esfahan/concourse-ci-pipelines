@@ -51,5 +51,5 @@ $ fly -t sample-app set-pipeline -p rails-sample -c ci/pipelines/pipeline.yml -l
 unpause
 
 ```
-$ fly -t sample-app unpause-pipeline -p rails-sample2
+$ fly -t sample-app unpause-pipeline -p rails-sample
 ```
